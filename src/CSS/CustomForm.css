@@ -12,6 +12,13 @@
     font-weight: bold;
   }
   
+  .form-subtitle {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1em;
+    font-weight: bold;
+  }
+
   .custom-form {
     width: 50%;
     display: flex;
