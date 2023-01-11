@@ -15,3 +15,8 @@
     background-color: white;
     padding: 20px;
   }
+
+  .modal-content {
+    width: 50%;
+    height: 50%;
+  }
