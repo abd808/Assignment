@@ -11,10 +11,18 @@ import TablePagination from '@material-ui/core/TablePagination';
 import { CircularProgress } from '@material-ui/core';
 import { Grid } from '@material-ui/core';
 import Modal from 'react-modal';
-import Popup from '../Popup';
 import PersonCard from './PersonCard';
+import { useMediaQuery,useTheme } from '@material-ui/core';
 
 import '../CSS/Popup.css'
+
+function formatHeadings(fields) {
+  return fields.map(field => {
+    let formattedField = field.replace(/_/g, " ");
+    return formattedField.replace(/\b[a-z]/g, (letter) => letter.toUpperCase());
+  });
+}
+
 
 const useStyles = makeStyles({
   table: {
@@ -30,8 +38,11 @@ const useStyles = makeStyles({
   },
 });
 
-const PeopleTable = () => {
+const PeopleTable = ({type,fields}) => {
   const classes = useStyles();
+  const [headings,setHeadings]=useState(formatHeadings(fields));
+  // console.log(type)
+  // const matches = useMediaQuery(theme => theme.breakpoints.down('sm'));
   const [people, setPeople] = useState([]);
   const [uniqueIds, setUniqueIds] = useState(new Set());
   const [loading, setLoading] = useState(true);
@@ -59,15 +70,20 @@ const PeopleTable = () => {
   };
 
   useEffect(() => {
+    setPeople([]);
+    setUniqueIds(new Set())
+    setPage(0);
+    setSelectedPerson(null);
+    setHeadings(formatHeadings(fields))
     const fetchData = async () => {
       setLoading(true);
       let id = 1;
-      let url= 'https://swapi.dev/api/people/'
+      let url= `https://swapi.dev/api/${type}/`
       while (url) {
         const res = await fetch(url);
         const data = await res.json();
         setLoading(false)
-        console.log(url,data.results)
+        // console.log(url,data.results)
         const uniqueData = data.results.filter(person => !uniqueIds.has(person.url));
         uniqueData.forEach(person => uniqueIds.add(person.url));
         setPeople((prevPeople) => [...prevPeople, ...uniqueData]);
@@ -77,13 +93,10 @@ const PeopleTable = () => {
       setLoading(false);
     };
     fetchData();
-  }, []);
+  }, [type]);
 
-  const handleClick = () => {
-    alert("Hi");
-  };
 
-  return loading? <Grid container justify="center" alignItems="center" style={{height: '20vh'}}>
+  return loading? <Grid container justifyContent="center" alignItems="center" style={{height: '20vh'}}>
   <CircularProgress size={50} color="secondary" />
   </Grid> : (
     <div>
@@ -92,8 +105,8 @@ const PeopleTable = () => {
         <TableHead>
           <TableRow  className={classes.header}>
             <TableCell className={classes.header}>ID</TableCell>
-            <TableCell className={classes.header}>Name</TableCell>
-            <TableCell align="right" className={classes.header}>Gender</TableCell>
+            <TableCell className={classes.header}>{headings[0]}</TableCell>
+            <TableCell align="right" className={classes.header}>{headings[1]}</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -102,8 +115,9 @@ const PeopleTable = () => {
               <TableCell component="th" scope="row">
                 {person.url.match(/(\d+)\/$/)[1]}
               </TableCell>
-              <TableCell>{person.name}</TableCell>
-              <TableCell align="right">{person.gender}</TableCell>
+              <TableCell>{person[fields[0]]}</TableCell>
+              <TableCell align="right">{person[fields[1]]}</TableCell>
+              
             </TableRow>
           ))}
         </TableBody>
@@ -124,8 +138,9 @@ const PeopleTable = () => {
     contentLabel="Person Details"
     // contentStyle={{width: "5%", height: "50%", maxWidth: "none", maxHeight: "none"}}
     className="popup-inner"
+    ariaHideApp={false}
     >
-    {selectedPerson && <PersonCard personURL={selectedPerson.url}/>}
+    {selectedPerson && <PersonCard personURL={selectedPerson.url} fields={fields} headings={headings}/>}
   </Modal>
   </div>
   );

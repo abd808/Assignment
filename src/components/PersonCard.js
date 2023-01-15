@@ -28,10 +28,9 @@ const useStyles = makeStyles({
   },
 });
 
-export default function PersonCard({ personURL }) {
+export default function PersonCard({ personURL,fields,headings }) {
   const classes = useStyles();
   const [person, setPerson] = useState({});
-
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -39,29 +38,26 @@ export default function PersonCard({ personURL }) {
       const response = await fetch(personURL);
       const data = await response.json();
       setPerson(data);
-      setLoading(false)
+      setLoading(false);
     }
     fetchData();
   }, [personURL]);
 
-  return loading? <Grid container justify="center" alignItems="center" style={{height: '20vh'}}>
+  return loading? <Grid container justifyContent="center" alignItems="center" style={{height: '20vh'}}>
   <CircularProgress size={50} color="primary" />
   </Grid>:(
     <Card className={classes.card}>
       <CardContent>
         <Typography className={classes.title} gutterBottom>
-          {person.name}
+          {person[fields[0]]}
         </Typography>
         <div className={classes.content}>
-          <p>Height: {person.height}</p>
-          <p>Mass: {person.mass}</p>
-          <p>Hair Color: {person.hair_color}</p>
-          <p>Skin Color: {person.skin_color}</p>
-          <p>Eye Color: {person.eye_color}</p>
-          <p>Birth Year: {person.birth_year}</p>
-          <p>Gender: {person.gender}</p>
+          {fields.map((field, index) => {
+            if (index === 0) return;
+            return <p>{headings[index]}: {person[field]}</p>
+          })}
         </div>
       </CardContent>
     </Card>
   );
-}
+} 

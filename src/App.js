@@ -10,9 +10,24 @@ function App() {
       <div className="container">
         <Routes>
           <Route path="/" element={<StarWarsImageBanner />} />
-          <Route path="/people" element={<PeopleList />} />
-          <Route path="/Client" element={<Client />} />
-          <Route path="/Server" element={<Server />} />
+          <Route path="/people" element={<PeopleList type = "people" 
+            fields={['name','gender','height','mass','hair_color','skin_color','eye_color']}
+            />} />
+          <Route path="/starships" element={<PeopleList type = "starships" 
+            fields={['name','model','manufacturer','length','crew','passengers','hyperdrive_rating']}
+            />} />
+          <Route path="/planets" element={<PeopleList type = "planets" 
+            fields={['name','rotation_period','diameter','climate','gravity','population','surface_water']}
+            />} />
+          <Route path="/films" element={<PeopleList type = "films" 
+            fields={['title','director','producer','release_date','episode_id']}
+            />} />
+          <Route path="/species" element={<PeopleList type = "species" 
+            fields={['name','classification','designation','skin_colors','hair_colors','average_lifespan','average_height']}
+            />} />
+          <Route path="/vehicles" element={<PeopleList type = "vehicles" 
+            fields={['name','model','manufacturer','length','crew','passengers','cargo_capacity','consumables']}
+            />} />
         </Routes>
       </div>
     </>
