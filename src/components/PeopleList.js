@@ -105,8 +105,12 @@ const PeopleTable = ({type,fields}) => {
         <TableHead>
           <TableRow  className={classes.header}>
             <TableCell className={classes.header}>ID</TableCell>
-            <TableCell className={classes.header}>{headings[0]}</TableCell>
-            <TableCell align="right" className={classes.header}>{headings[1]}</TableCell>
+            {/* <TableCell className={classes.header}>{headings[0]}</TableCell>
+            <TableCell align="right" className={classes.header}>{headings[1]}</TableCell> */}
+            {headings.map((field, index) => {
+              
+            return <TableCell className={classes.header}>{headings[index]}</TableCell>
+          })}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -115,8 +119,13 @@ const PeopleTable = ({type,fields}) => {
               <TableCell component="th" scope="row">
                 {person.url.match(/(\d+)\/$/)[1]}
               </TableCell>
-              <TableCell>{person[fields[0]]}</TableCell>
-              <TableCell align="right">{person[fields[1]]}</TableCell>
+              {/* <TableCell>{person[fields[0]]}</TableCell>
+              <TableCell align="right">{person[fields[1]]}</TableCell> */}
+              {fields.map((field, index) => {
+              
+            return <TableCell >{person[field]}</TableCell>
+               })}
+
               
             </TableRow>
           ))}
